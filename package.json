@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "pnpm lint.eslint && pnpm lint.prettier",
+    "lint.eslint": "eslint \"packages/**/src/*.ts*\"",
+    "lint.prettier": "prettier --check \"packages/**/src/*.ts*\"",
+    "build.qwik": "pnpm --filter=qwik run build"
   },
   "keywords": [
     "Toast",
@@ -23,5 +26,10 @@
       "url": "https://github.com/devalexpy"
     }
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/eslint": "8.40.2",
+    "eslint": "8.44.0",
+    "prettier": "2.8.8"
+  }
 }
