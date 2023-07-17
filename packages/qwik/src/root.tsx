@@ -15,9 +15,15 @@ export default () => {
           minHeight: "100vh",
         }}
       >
-        <button onClick$={() => toast.success('Título', {
-          description: 'Descrição',
-        })}>Add toast</button>
+        <button
+          onClick$={() =>
+            toast.success("Título", {
+              description: "Descrição",
+            })
+          }
+        >
+          Add toast
+        </button>
         <Toaster closeButton visibleToasts={VisibleToast.five} />
       </body>
     </>
