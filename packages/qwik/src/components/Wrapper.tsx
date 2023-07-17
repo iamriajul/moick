@@ -12,7 +12,7 @@ import {
   GAP,
   TOAST_WIDTH,
   DEFAULT_WRAPPER_OPTIONS,
-  createOptionsObject
+  createOptionsObject,
 } from "../utils";
 import { toastState } from "./state";
 import { State, Theme, ToasterProps } from "../types";
@@ -20,7 +20,10 @@ import { Toast } from "./Toast";
 import styles from "./styles.css?inline";
 
 export const Toaster = component$<ToasterProps>((props) => {
-  const opts = createOptionsObject<Required<ToasterProps>>(DEFAULT_WRAPPER_OPTIONS, props);
+  const opts = createOptionsObject<Required<ToasterProps>>(
+    DEFAULT_WRAPPER_OPTIONS,
+    props
+  );
   useStyles$(styles);
 
   const wrapperRef = useSignal<HTMLOListElement>();
@@ -37,9 +40,8 @@ export const Toaster = component$<ToasterProps>((props) => {
     .join(" + ")
     .replace(/Key/g, "")
     .replace(/Digit/g, "");
-  const offset = typeof opts.offset === "number"
-    ? `${opts.offset}px`
-    : opts.offset
+  const offset =
+    typeof opts.offset === "number" ? `${opts.offset}px` : opts.offset;
 
   // this is the relationship between the toast and the this component
   useVisibleTask$(() => {

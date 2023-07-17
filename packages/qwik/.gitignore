@@ -13,6 +13,7 @@ node_modules
 .vscode
 .rollup.cache
 tsconfig.tsbuildinfo
+tsconfig.build.tsbuildinfo
 
 # Logs
 logs
