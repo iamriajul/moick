@@ -5,6 +5,8 @@ on:
     types:
       - opened
       - reopened
+    paths:
+      - "packages/**/src/**"
 
 jobs:
   test:
