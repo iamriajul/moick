@@ -8,8 +8,8 @@
     "lint.prettier": "prettier --check \"packages/**/src/*.ts*\"",
     "build": "pnpm build.qwik",
     "build.qwik": "pnpm --filter=qwik run build",
-    "ci:version": "pnpm changesets version",
-    "ci:publish": "pnpm changesets publish"
+    "ci:version": "pnpm changeset version",
+    "ci:publish": "pnpm changeset publish"
   },
   "keywords": [
     "Toast",
