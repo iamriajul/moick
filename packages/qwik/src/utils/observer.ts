@@ -16,7 +16,7 @@ export class Observer {
     this.subscribers.push(sub);
 
     return () => {
-      console.log('executing unsubscribe');
+      console.log("executing unsubscribe");
       this.subscribers = this.subscribers.filter((s) => s !== sub);
     };
   };

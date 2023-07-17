@@ -1,2 +1,2 @@
-export * from './components'
-export type { BasicOptions, ToasterProps } from './types'
+export * from "./components";
+export type { BasicOptions, ToasterProps } from "./types";
