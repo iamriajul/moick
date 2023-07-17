@@ -34,6 +34,29 @@
     "start": "vite --open --mode ssr",
     "qwik": "qwik"
   },
+  "keywords": [
+    "qwik",
+    "qwik library",
+    "typescript",
+    "toast"
+  ],
+  "author": {
+    "name": "diecodev",
+    "url": "https://github.com/diecodev"
+  },
+  "contributors": [
+    {
+      "name": "devalexpy",
+      "url": "https://github.com/devalexpy"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "directory": "packages/qwik",
+    "url": "https://github.com/diecodev/moick"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/diecodev/moick",
   "devDependencies": {
     "@builder.io/qwik": "1.2.6",
     "@types/node": "^20.4.0",
