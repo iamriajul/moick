@@ -5,6 +5,7 @@ on:
     types:
       - opened
       - reopened
+      - synchronize
     paths:
       - "packages/**/src/**"
 
@@ -20,4 +21,7 @@ jobs:
         with:
           node-version: 18
           cache: "pnpm"
-      - run: pnpm lint && pnpm build
+      - uses: tj-actions/changed-files@v37
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint && pnpm build.qwik
+        if: contains(${{ steps.changed-files.outputs.all_changed_files }}, 'packages/qwik')
