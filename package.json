@@ -6,7 +6,10 @@
     "lint": "pnpm lint.eslint && pnpm lint.prettier",
     "lint.eslint": "eslint \"packages/**/src/*.ts*\"",
     "lint.prettier": "prettier --check \"packages/**/src/*.ts*\"",
-    "build.qwik": "pnpm --filter=qwik run build"
+    "build": "pnpm build.qwik",
+    "build.qwik": "pnpm --filter=qwik run build",
+    "ci:version": "pnpm changesets version",
+    "ci:publish": "pnpm changesets publish"
   },
   "keywords": [
     "Toast",
@@ -28,6 +31,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@changesets/cli": "2.26.2",
     "@types/eslint": "8.40.2",
     "eslint": "8.44.0",
     "prettier": "2.8.8"

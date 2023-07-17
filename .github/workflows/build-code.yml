@@ -1,0 +1,38 @@
+name: build and lint packages
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - "packages/**/src/**"
+
+jobs:
+  build_and_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+
+      - name: Get Changed Files
+        uses: tj-actions/changed-files@v37
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and Lint
+        run: pnpm lint && pnpm build.qwik
+        if: contains(${{ steps.changed-files.outputs.all_changed_files }}, 'packages/qwik')
