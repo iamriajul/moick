@@ -40,18 +40,34 @@ export const Toaster = component$<ToasterProps>((props) => {
     .join(" + ")
     .replace(/Key/g, "")
     .replace(/Digit/g, "");
-  const offset =
-    typeof opts.offset === "number" ? `${opts.offset}px` : opts.offset;
+  const offset = typeof opts.offset === "number" ? `${opts.offset}px` : opts.offset;
 
+  const addToastEventRegistered = useSignal(false);
   useOnDocument(DOCUMENT_CUSTOM_EVENT_ADD_TOAST, $((ev) => {
-    if (ev instanceof CustomEvent) {
+    // There is some weird behavior with the useOnDocument hook
+    // discussed here: https://discord.com/channels/842438759945601056/1179378981976416299
+    if (addToastEventRegistered.value) return;
+    addToastEventRegistered.value = true;
+
+    const onEvent = (ev: Event) => {
+      if (!(ev instanceof CustomEvent)) return;
       const toast = ev.detail as ToastType;
       state.toasts = [toast, ...state.toasts];
     }
+    onEvent(ev);
+
+    document.addEventListener(DOCUMENT_CUSTOM_EVENT_ADD_TOAST, onEvent);
   }));
 
+  const removeToastEventRegistered = useSignal(false);
   useOnDocument(DOCUMENT_CUSTOM_EVENT_REMOVE_TOAST, $((ev) => {
-    if (ev instanceof CustomEvent) {
+    // There is some weird behavior with the useOnDocument hook
+    // discussed here: https://discord.com/channels/842438759945601056/1179378981976416299
+    if (removeToastEventRegistered.value) return;
+    removeToastEventRegistered.value = true;
+
+    const onEvent = (ev: Event) => {
+      if (!(ev instanceof CustomEvent)) return;
       const toastId = ev.detail as string;
       state.toasts = state.toasts.map(type => {
         if (type.id === toastId) {
@@ -63,6 +79,9 @@ export const Toaster = component$<ToasterProps>((props) => {
         return type;
       });
     }
+    onEvent(ev);
+
+    document.addEventListener(DOCUMENT_CUSTOM_EVENT_REMOVE_TOAST, onEvent);
   }));
 
   // handle user color theme preference
