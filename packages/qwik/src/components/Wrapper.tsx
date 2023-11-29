@@ -6,7 +6,6 @@ import {
   useStore,
   useStyles$,
   useTask$,
-  useVisibleTask$,
 } from "@builder.io/qwik";
 import {
   GAP,
@@ -14,10 +13,11 @@ import {
   DEFAULT_WRAPPER_OPTIONS,
   createOptionsObject,
 } from "../utils";
-import { toastState } from "./state";
-import { State, Theme, ToasterProps } from "../types";
+import { State, Theme, ToasterProps, type Toast as ToastType } from "../types";
 import { Toast } from "./Toast";
 import styles from "./styles.css?inline";
+import {DOCUMENT_CUSTOM_EVENT_ADD_TOAST, DOCUMENT_CUSTOM_EVENT_REMOVE_TOAST} from "./state";
+import {isServer} from "@builder.io/qwik/build";
 
 export const Toaster = component$<ToasterProps>((props) => {
   const opts = createOptionsObject<Required<ToasterProps>>(
@@ -43,28 +43,38 @@ export const Toaster = component$<ToasterProps>((props) => {
   const offset =
     typeof opts.offset === "number" ? `${opts.offset}px` : opts.offset;
 
-  // this is the relationship between the toast and the this component
-  useVisibleTask$(() => {
-    return toastState.subscribe((toast) => {
-      if (toast.dismiss) {
-        state.toasts = state.toasts.map((t) =>
-          t.id === toast.id ? { ...t, dismiss: true } : t
-        );
-        return;
-      }
-
+  useOnDocument(DOCUMENT_CUSTOM_EVENT_ADD_TOAST, $((ev) => {
+    if (ev instanceof CustomEvent) {
+      const toast = ev.detail as ToastType;
       state.toasts = [toast, ...state.toasts];
-    });
-  });
+    }
+  }));
+
+  useOnDocument(DOCUMENT_CUSTOM_EVENT_REMOVE_TOAST, $((ev) => {
+    if (ev instanceof CustomEvent) {
+      const toastId = ev.detail as string;
+      state.toasts = state.toasts.map(type => {
+        if (type.id === toastId) {
+          return {
+            ...type,
+            dismiss: true,
+          };
+        }
+        return type;
+      });
+    }
+  }));
 
   // handle user color theme preference
-  useVisibleTask$(({ track }) => {
+  useTask$(({ track }) => {
     const theme = track(() => opts.theme);
 
     if (theme !== Theme.system) {
       state.theme = theme;
       return;
     }
+
+    if (isServer) return;
 
     window
       .matchMedia("(prefers-color-scheme: dark)")
@@ -107,8 +117,8 @@ export const Toaster = component$<ToasterProps>((props) => {
     })
   );
 
-  // There are not toasts to show = no need to render
-  if (!state.toasts.length) return null;
+  // There are no toasts to show = no need to render
+  if (!state.toasts.length) return <></>
 
   // render the toasts
   return (
